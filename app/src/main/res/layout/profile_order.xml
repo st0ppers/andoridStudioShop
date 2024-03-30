@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="16dp">
+
+    <ImageView
+        android:id="@+id/shoppingItem"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="16dp"
+        android:scaleType="centerCrop"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/itemNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:textSize="22sp"
+        android:layout_marginTop="16dp"
+        android:layout_toEndOf="@+id/shoppingItem"
+        android:text="@string/item_name"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/priceNumberTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:layout_below="@+id/itemNameTextView"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="6dp"
+        android:text="@string/textview"
+        android:textColor="@color/green"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/itemPriceTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/itemNameTextView"
+        android:layout_marginTop="6dp"
+        android:layout_toEndOf="@+id/shoppingItem"
+        android:text="@string/price"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="29dp"
+        android:layout_alignStart="@+id/itemPriceTextView"
+        android:layout_alignBottom="@+id/shoppingItem"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="95dp"
+        android:layout_marginBottom="35dp"
+        android:text="Recieved" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignBottom="@+id/textView"
+        android:layout_marginStart="145dp"
+        android:layout_marginBottom="3dp"
+        android:layout_toEndOf="@+id/shoppingItem"
+        app:srcCompat="@drawable/circle" />
+
+</RelativeLayout>
+
