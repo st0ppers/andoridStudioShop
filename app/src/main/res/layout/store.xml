@@ -60,5 +60,4 @@
             android:layout_weight="1"
             tools:srcCompat="@drawable/profile" />
     </LinearLayout>
-
 </RelativeLayout>

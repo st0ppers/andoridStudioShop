@@ -31,7 +31,6 @@ public class WishlistActivity extends AppCompatActivity {
         wishlistAdapter = new WishlistAdapter(items);
         wishlistRecyleView.setAdapter(wishlistAdapter);
         wishlistRecyleView.setLayoutManager(new LinearLayoutManager(this));
-        //Use shopping list item
     }
 
     private List<KeyboardModel> GetWishlistItems() {

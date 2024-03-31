@@ -37,20 +37,6 @@ public class StoreActivity extends AppCompatActivity {
         itemsRecyclerView.setAdapter(storeAdapter);
         itemsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         OnClickListeners();
-
-//        searchEditText.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                // Filter items when text changes
-//                storeAdapter.filter(s.toString());
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {}
-//        });
     }
 
     private void OnClickListeners() {

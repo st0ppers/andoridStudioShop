@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- activity_profile.xml -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -46,7 +45,7 @@
         android:layout_marginTop="8dp"
         android:gravity="center"
         android:text="@string/order_list"
-        android:textSize="24dp"
+        android:textSize="24sp"
         android:textStyle="bold" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -55,7 +54,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/orderListLabelTextView"
         android:layout_marginTop="8dp" >
-
     </androidx.recyclerview.widget.RecyclerView>
 
     <LinearLayout
@@ -95,8 +93,4 @@
             android:layout_weight="1"
             tools:srcCompat="@drawable/profile" />
     </LinearLayout>
-
 </RelativeLayout>
-<!--<androidx.coordinatorlyout.widgetCoordinatorLayout>-->
-
-

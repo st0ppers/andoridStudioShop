@@ -32,7 +32,6 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         KeyboardModel keyboard = itemList.get(position);
         holder.title.setText(keyboard.getName());
         holder.count.setText(String.valueOf(keyboard.getCount()));
-//        holder.totalPrice.setText(String.valueOf(keyboard.getTotalPrice()));
         holder.totalPrice.setText("$" + String.format("%.2f", keyboard.getTotalPrice()));
         holder.photo.setImageResource(keyboard.getPhotoId());
 
@@ -55,8 +54,6 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
             totalPrice = itemView.findViewById(R.id.totalCostTextView);
             count = itemView.findViewById(R.id.itemCountTextView);
             photo = itemView.findViewById(R.id.keyboardItemImageView);
-
-            // Initialize other views for item details as needed
         }
     }
 }

@@ -43,20 +43,6 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreItemVie
         return itemList.size();
     }
 
-    //    public void filter(String searchText) {
-//        filteredItems.clear();
-//        if (TextUtils.isEmpty(searchText)) {
-//            filteredItems.addAll(itemList);
-//        } else {
-//            for (KeyboardModel item : itemList) {
-//                if (item.getName().toLowerCase().contains(searchText.toLowerCase())) {
-//                    filteredItems.add(item);
-//                }
-//            }
-//        }
-//        notifyDataSetChanged();
-//    }
-//
     public static class StoreItemViewHolder extends RecyclerView.ViewHolder {
         TextView name;
         TextView price;
