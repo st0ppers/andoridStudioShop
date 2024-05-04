@@ -15,7 +15,8 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:scaleType="centerCrop"
-        tools:srcCompat="@tools:sample/avatars" />
+        tools:srcCompat="@tools:sample/avatars"
+        android:contentDescription="@string/keyboard_image" />
 
     <TextView
         android:id="@+id/itemNameTextView"
@@ -100,7 +101,7 @@
         android:stepSize="0.1" />
 
     <ImageView
-        android:id="@+id/imageView3"
+        android:id="@+id/wishlistButton"
         android:layout_width="42dp"
         android:layout_height="42dp"
         android:layout_below="@+id/ratingBar"
@@ -109,6 +110,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
         android:layout_toEndOf="@+id/shoppingItem"
-        app:srcCompat="@drawable/heart" />
+        app:srcCompat="@drawable/heart"
+        android:contentDescription="@string/add_to_wishlist_button" />
 </RelativeLayout>
 

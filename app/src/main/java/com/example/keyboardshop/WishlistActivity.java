@@ -1,26 +1,29 @@
 package com.example.keyboardshop;
 
+import static com.example.keyboardshop.Mapper.entityToModel;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class WishlistActivity extends AppCompatActivity {
+    DbHelper dbHelper;
     ImageView shopButton, cartButton, wishlistButton, profileButton;
     RecyclerView wishlistRecyleView;
     WishlistAdapter wishlistAdapter;
     List<KeyboardModel> items;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        dbHelper = new DbHelper(this);
         setContentView(R.layout.wishlist);
         InitBottomNavigation();
         OnClickListeners();
@@ -28,17 +31,16 @@ public class WishlistActivity extends AppCompatActivity {
         wishlistRecyleView = findViewById(R.id.wishlistRecyleView);
 
         items = GetWishlistItems();
-        wishlistAdapter = new WishlistAdapter(items);
+        wishlistAdapter = new WishlistAdapter(items, this);
         wishlistRecyleView.setAdapter(wishlistAdapter);
         wishlistRecyleView.setLayoutManager(new LinearLayoutManager(this));
     }
 
-    private List<KeyboardModel> GetWishlistItems() {
-        List<KeyboardModel> list = new ArrayList<>();
-        list.add(new KeyboardModel(2, "GMMK Pro", 55, R.drawable.gmmk, 1, 1, 4));
-        list.add(new KeyboardModel(1, "Sofle", 156, R.drawable.sofle, 10, 0, 3));
-        list.add(new KeyboardModel(4, "Chocofi", 200, R.drawable.chocofi, 22, 10, 5));
-        return list;
+    public List<KeyboardModel> GetWishlistItems() {
+        List<Integer> keyboardIds = dbHelper.getKeyboardsFromWishlistByCustomerId(1);//todo get customerId
+        List<KeyboardEntity> entities = dbHelper.getAllById(keyboardIds);
+
+        return entityToModel(entities);
     }
 
     private void OnClickListeners() {
@@ -70,5 +72,15 @@ public class WishlistActivity extends AppCompatActivity {
         cartButton.setImageResource(R.drawable.cart);
         wishlistButton.setImageResource(R.drawable.whishlist);
         profileButton.setImageResource(R.drawable.profile);
+    }
+
+    public void removeFromWishlist(int customerId, int keyboardId,int position) {
+        boolean success = dbHelper.deleteFromWishlist(customerId, keyboardId);
+        if (success) {
+            wishlistAdapter.notifyItemRemoved(position);
+            Toast.makeText(this, "Successfully remove keyboard from wishlist", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Toast.makeText(this, "Failed to remove keyboard from wishlist", Toast.LENGTH_SHORT).show();
     }
 }

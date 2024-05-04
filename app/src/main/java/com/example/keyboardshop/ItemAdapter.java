@@ -31,7 +31,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
         KeyboardModel keyboard = itemList.get(position);
         holder.title.setText(keyboard.getName());
-        holder.count.setText(String.valueOf(keyboard.getCount()));
+        holder.count.setText(String.valueOf(keyboard.getQuantity()));
         holder.totalPrice.setText("$" + String.format("%.2f", keyboard.getTotalPrice()));
         holder.photo.setImageResource(keyboard.getPhotoId());
 

@@ -1,6 +1,7 @@
 package com.example.keyboardshop;
 
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
@@ -12,11 +13,13 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CartActivity extends AppCompatActivity {
-    private static final double deliveryFee = 19.99;
+    private static final BigDecimal deliveryFee = BigDecimal.valueOf(19.99);
     RecyclerView cartItemsRecyclerView;
     Button checkoutButton;
     TextView totalPriceTextView, deliveryTextView, subTotalTextView;
@@ -40,8 +43,9 @@ public class CartActivity extends AppCompatActivity {
         subTotalTextView = findViewById(R.id.subTotalPriceTextViewNumber);
         subTotalTextView.setText("$" + String.format("%.2f", CalculateSubTotalPrice()));
         totalPriceTextView = findViewById(R.id.totalPriceTextViewNumber);
-        double totalPrice = CalculateSubTotalPrice();
-        totalPriceTextView.setText("$" + String.format("%.2f", (totalPrice + deliveryFee)));
+        BigDecimal totalPrice = CalculateSubTotalPrice();
+        totalPrice = totalPrice.add(deliveryFee);
+        totalPriceTextView.setText("$" + String.format("%.2f", totalPrice));
 
         itemAdapter = new ItemAdapter(items);
         cartItemsRecyclerView.setAdapter(itemAdapter);
@@ -69,17 +73,17 @@ public class CartActivity extends AppCompatActivity {
         });
     }
 
-    private double CalculateSubTotalPrice() {
-        double price = 0;
+    private BigDecimal CalculateSubTotalPrice() {
+        BigDecimal price = BigDecimal.valueOf(0);
         for (KeyboardModel keyboard : items) {
-            price += keyboard.totalPrice;
+            price = price.add(keyboard.totalPrice);
         }
         return price;
     }
 
     private List<KeyboardModel> GetItemsInCart() {
         List<KeyboardModel> list = new ArrayList<>();
-        list.add(new KeyboardModel(1, "Alice 66", 89, R.drawable.alice, 65, 0, 2));
+//        list.add(new KeyboardModel(1, "Alice 66", BigDecimal.valueOf(89), R.drawable.alice, 0, 2));
         return list;
     }
 

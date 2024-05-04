@@ -14,10 +14,12 @@ import java.text.DecimalFormat;
 import java.util.List;
 
 public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreItemViewHolder> {
-    private List<KeyboardModel> itemList;
+    private final List<KeyboardModel> itemList;
+    private final StoreActivity storeActivity;
 
-    public StoreAdapter(List<KeyboardModel> itemList) {
+    public StoreAdapter(List<KeyboardModel> itemList, StoreActivity storeActivity) {
         this.itemList = itemList;
+        this.storeActivity = storeActivity;
     }
 
     @NonNull
@@ -32,10 +34,16 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreItemVie
         KeyboardModel keyboard = itemList.get(position);
         holder.name.setText(keyboard.getName());
         holder.price.setText("$" + String.format("%.2f", keyboard.getSinglePrice()));
-        holder.inStock.setText(keyboard.getInStock() + "%");
-        holder.discount.setText(String.valueOf(keyboard.getDiscount()));
+        holder.inStock.setText(String.valueOf(keyboard.getQuantity()));
+        holder.discount.setText(keyboard.getDiscount() + "%");
         holder.ratingBar.setRating(keyboard.getRating());
         holder.image.setImageResource(keyboard.getPhotoId());
+
+        holder.wishlistButton.setOnClickListener(v ->{
+            if (position != RecyclerView.NO_POSITION) {
+                storeActivity.insertIntoDatabase(1,keyboard.getId());
+            }
+        });
     }
 
     @Override
@@ -43,12 +51,16 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreItemVie
         return itemList.size();
     }
 
+    public List<KeyboardModel> getList() {
+        return itemList;
+    }
+
     public static class StoreItemViewHolder extends RecyclerView.ViewHolder {
         TextView name;
         TextView price;
         TextView inStock;
         TextView discount;
-        ImageView image;
+        ImageView image, wishlistButton;
         RatingBar ratingBar;
 
         public StoreItemViewHolder(@NonNull View itemView) {
@@ -59,6 +71,8 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreItemVie
             price = itemView.findViewById(R.id.priceNumberTextView);
             discount = itemView.findViewById(R.id.discountNumber);
             ratingBar = itemView.findViewById(R.id.ratingBar);
+            wishlistButton = itemView.findViewById(R.id.wishlistButton);
         }
     }
 }
+

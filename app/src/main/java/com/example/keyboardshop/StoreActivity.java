@@ -1,22 +1,24 @@
 package com.example.keyboardshop;
 
+import static com.example.keyboardshop.Mapper.entityToModel;
+
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 public class StoreActivity extends AppCompatActivity {
+    DbHelper dbHelper;
     EditText searchEditText;
     RecyclerView itemsRecyclerView;
     List<KeyboardModel> keyboardModelList;
@@ -26,18 +28,39 @@ public class StoreActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        dbHelper = new DbHelper(this);
         setContentView(R.layout.store);
         InitBottomNavigation();
 
         searchEditText = findViewById(R.id.searchEditText);
         itemsRecyclerView = findViewById(R.id.itemsRecyclerView);
 
-        keyboardModelList = MockData();
-        storeAdapter = new StoreAdapter(keyboardModelList);
+        List<KeyboardEntity> dbKeyboards = dbHelper.getAll();
+        keyboardModelList = entityToModel(dbKeyboards);
+
+        storeAdapter = new StoreAdapter(keyboardModelList, this);
         itemsRecyclerView.setAdapter(storeAdapter);
         itemsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         OnClickListeners();
     }
+
+//        RecyclerView.Adapter adapter = itemsRecyclerView.getAdapter();
+//
+//// Check if the adapter is not null and is of the expected type
+//        if (adapter instanceof StoreAdapter) {
+//            StoreAdapter yourAdapter = (StoreAdapter) adapter;
+//            List<KeyboardModel> allItems = yourAdapter.getList();
+//
+//            for (KeyboardModel item : allItems) {
+//                int quantity =item.getQuantity();
+//                String itemName = item.getName();
+//                BigDecimal itemPrice = item.getSinglePrice();
+//                int photoId  = item.getPhotoId();
+//                int discount = item.getDiscount();
+//                float rating = item.getRating();
+//            }
+//        }
+//    }
 
     private void OnClickListeners() {
         profileButton.setOnClickListener(v -> {
@@ -70,12 +93,14 @@ public class StoreActivity extends AppCompatActivity {
         profileButton.setImageResource(R.drawable.profile);
     }
 
-    private List<KeyboardModel> MockData() {
-        List<KeyboardModel> list = new ArrayList<>();
-        list.add(new KeyboardModel(2, "GMMK Pro", 55, R.drawable.gmmk, 1, 1, 4));
-        list.add(new KeyboardModel(1, "Sofle", 156, R.drawable.sofle, 10, 0, 3));
-        list.add(new KeyboardModel(4, "Chocofi", 200, R.drawable.chocofi, 22, 10, 5));
-        list.add(new KeyboardModel(1, "Alice 66", 89, R.drawable.alice, 65, 0, 2));
-        return list;
+    public void insertIntoDatabase(int customerId, int keyboardId) {
+        //TODO Get CustomerId
+        List<Integer> ids = dbHelper.getKeyboardsFromWishlistByCustomerId(customerId);
+        if (ids.contains(keyboardId)) {
+            Toast.makeText(this, "Keyboard is already in your wishlist", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        dbHelper.addToWishList(customerId, keyboardId);
+        Toast.makeText(this, "Successfully added to your wishlist", Toast.LENGTH_SHORT).show();
     }
 }

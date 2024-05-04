@@ -13,9 +13,11 @@ import java.util.List;
 
 public class WishlistAdapter extends RecyclerView.Adapter<WishlistAdapter.WishListItemViewHolder> {
     private List<KeyboardModel> itemList;
+    private final WishlistActivity wishlistActivity;
 
-    public WishlistAdapter(List<KeyboardModel> itemList) {
+    public WishlistAdapter(List<KeyboardModel> itemList, WishlistActivity wishlistActivity) {
         this.itemList = itemList;
+        this.wishlistActivity = wishlistActivity;
     }
 
     @NonNull
@@ -31,6 +33,12 @@ public class WishlistAdapter extends RecyclerView.Adapter<WishlistAdapter.WishLi
         holder.name.setText(keyboard.getName());
         holder.price.setText("$" + String.format("%.2f", keyboard.getSinglePrice()));
         holder.image.setImageResource(keyboard.getPhotoId());
+        holder.removeButton.setOnClickListener(v -> {
+            if (position != RecyclerView.NO_POSITION) {
+                wishlistActivity.removeFromWishlist(1, keyboard.getId(), position);
+                itemList.remove(position);
+            }
+        });
     }
 
     @Override
@@ -39,15 +47,15 @@ public class WishlistAdapter extends RecyclerView.Adapter<WishlistAdapter.WishLi
     }
 
     public static class WishListItemViewHolder extends RecyclerView.ViewHolder {
-        TextView name;
-        TextView price;
-        ImageView image;
+        TextView name, price;
+        ImageView image, removeButton;
 
         public WishListItemViewHolder(@NonNull View itemView) {
             super(itemView);
             image = itemView.findViewById(R.id.keyboardItemImageView);
             name = itemView.findViewById(R.id.titleTextView);
             price = itemView.findViewById(R.id.totalCostTextView);
+            removeButton = itemView.findViewById(R.id.removeFromWishlist);
         }
     }
 }

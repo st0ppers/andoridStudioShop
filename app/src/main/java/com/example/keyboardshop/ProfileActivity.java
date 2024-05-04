@@ -1,6 +1,8 @@
 package com.example.keyboardshop;
 
 
+import static com.example.keyboardshop.Mapper.entityToModel;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageView;
@@ -10,10 +12,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProfileActivity extends AppCompatActivity {
+    DbHelper dbHelper;
     List<KeyboardModel> orders;
     ImageView profileImageView;
     TextView nameTextView, emailTextView;
@@ -24,6 +28,7 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        dbHelper = new DbHelper(this);
         setContentView(R.layout.profile);
         InitBottomNavigation();
 
@@ -32,7 +37,7 @@ public class ProfileActivity extends AppCompatActivity {
         emailTextView = findViewById(R.id.emailTextView);
         orderListRecyclerView = findViewById(R.id.orderListRecyclerView);
 
-        orders = GetBoughtItems();
+        orders = GetBoughtItems();//todo get from db
         adapter = new ProfileOrderAdapter(orders);
         orderListRecyclerView.setAdapter(adapter);
         orderListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -40,10 +45,10 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private List<KeyboardModel> GetBoughtItems() {
-        List<KeyboardModel> list = new ArrayList<>();
-        list.add(new KeyboardModel(1, "Alice 66", 89, R.drawable.alice, 65, 0, 2));
-        return list;
+        List<KeyboardEntity> entities = dbHelper.getOrders(1);
+        return entityToModel(entities);
     }
+
     private void OnClickListeners() {
         profileButton.setOnClickListener(v -> {
             Intent intent = new Intent(ProfileActivity.this, ProfileActivity.class);
