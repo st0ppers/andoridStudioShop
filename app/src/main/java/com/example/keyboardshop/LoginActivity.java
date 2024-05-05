@@ -2,12 +2,8 @@ package com.example.keyboardshop;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.widget.Button;
-import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -41,23 +37,22 @@ public class LoginActivity extends AppCompatActivity {
         String username = usernameEditText.getText().toString();
         String password = passwordEditText.getText().toString();
 
-//        Cursor c = dbHelper.getByUsername(username);
-//        if (c != null && c.moveToFirst()) {
-//            int index = c.getColumnIndex("Password");
-//            String storedPassword = c.getString(index);
-//
-//            if (password.equals(storedPassword)) {
-//                Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(LoginActivity.this, StoreActivity.class);
-        startActivity(intent);
-//            } else {
-//                Toast.makeText(LoginActivity.this, "Incorrect password", Toast.LENGTH_SHORT).show();
-//            }
-//
-//        } else {
-//            Toast.makeText(LoginActivity.this, "Username not found", Toast.LENGTH_SHORT).show();
-//        }
+        Cursor c = dbHelper.getCustomerByUsername(username);
+        if (c != null && c.moveToFirst()) {
+            int index = c.getColumnIndex("Password");
+            String storedPassword = c.getString(index);
 
+            if (password.equals(storedPassword)) {
+                Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(LoginActivity.this, StoreActivity.class);
+                startActivity(intent);
+            } else {
+                Toast.makeText(LoginActivity.this, "Incorrect password", Toast.LENGTH_SHORT).show();
+            }
+
+        } else {
+            Toast.makeText(LoginActivity.this, "Username not found", Toast.LENGTH_SHORT).show();
+        }
     }
 }
 

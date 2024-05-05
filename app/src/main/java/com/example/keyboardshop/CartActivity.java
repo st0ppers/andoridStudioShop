@@ -1,12 +1,11 @@
 package com.example.keyboardshop;
 
-
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -14,12 +13,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
 
 public class CartActivity extends AppCompatActivity {
     private static final BigDecimal deliveryFee = BigDecimal.valueOf(19.99);
+    DbHelper dbHelper;
     RecyclerView cartItemsRecyclerView;
     Button checkoutButton;
     TextView totalPriceTextView, deliveryTextView, subTotalTextView;
@@ -32,29 +30,50 @@ public class CartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.shopping_cart);
         InitBottomNavigation();
-        items = GetItemsInCart();
-
+        dbHelper = new DbHelper(this);
+        items = InMemoryCart.getCart();
         checkoutButton = findViewById(R.id.chekcoutButton);
         checkoutButton.setBackgroundColor(ContextCompat.getColor(this, R.color.green));
+        checkoutButton.setOnClickListener(v -> {
+            for (KeyboardModel km : items) {
+                List<KeyboardEntity> list = dbHelper.getKeyboard(km.getId());
+                if (list.get(0).getQuantity() < km.getQuantity()){
+                    Toast.makeText(this, "Don't have enough in stock.", Toast.LENGTH_SHORT).show();
+                    continue;
+                }
+                dbHelper.addToOrders(1, km.getId(), km.getQuantity());
+                Toast.makeText(this, "Successfully ordered.", Toast.LENGTH_SHORT).show();
+            }
+            items.clear();
+        });
 
         cartItemsRecyclerView = findViewById(R.id.cartItemsRecyclerView);
         deliveryTextView = findViewById(R.id.deliveryTextViewNumber);
-        deliveryTextView.setText("$" + String.format("%.2f", deliveryFee));
         subTotalTextView = findViewById(R.id.subTotalPriceTextViewNumber);
-        subTotalTextView.setText("$" + String.format("%.2f", CalculateSubTotalPrice()));
         totalPriceTextView = findViewById(R.id.totalPriceTextViewNumber);
+
+        subTotalTextView.setText("$" + String.format("%.2f", CalculateSubTotalPrice()));
+
         BigDecimal totalPrice = CalculateSubTotalPrice();
         totalPrice = totalPrice.add(deliveryFee);
-        totalPriceTextView.setText("$" + String.format("%.2f", totalPrice));
+
+        if (items.isEmpty()) {
+            deliveryTextView.setText("$" + String.format("%.2f", BigDecimal.valueOf(0)));
+            totalPriceTextView.setText("$" + String.format("%.2f", BigDecimal.valueOf(0)));
+        } else {
+            deliveryTextView.setText("$" + String.format("%.2f", deliveryFee));
+            totalPriceTextView.setText("$" + String.format("%.2f", totalPrice));
+        }
 
         itemAdapter = new ItemAdapter(items);
         cartItemsRecyclerView.setAdapter(itemAdapter);
         cartItemsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        OnClickListeners();
+        bottomNavigationListeners();
     }
 
-    private void OnClickListeners() {
+
+    private void bottomNavigationListeners() {
         profileButton.setOnClickListener(v -> {
             Intent intent = new Intent(CartActivity.this, ProfileActivity.class);
             startActivity(intent);
@@ -79,12 +98,6 @@ public class CartActivity extends AppCompatActivity {
             price = price.add(keyboard.totalPrice);
         }
         return price;
-    }
-
-    private List<KeyboardModel> GetItemsInCart() {
-        List<KeyboardModel> list = new ArrayList<>();
-//        list.add(new KeyboardModel(1, "Alice 66", BigDecimal.valueOf(89), R.drawable.alice, 0, 2));
-        return list;
     }
 
     private void InitBottomNavigation() {

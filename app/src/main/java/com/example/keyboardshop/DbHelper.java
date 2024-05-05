@@ -8,26 +8,28 @@ import android.database.sqlite.SQLiteOpenHelper;
 import androidx.annotation.Nullable;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
 public class DbHelper extends SQLiteOpenHelper {
     public static final String DBNAME = "keyboard.db";
-    public static final int DBVERSION = 6;
+    public static final int DBVERSION = 7;
     private SQLiteDatabase _myDB;
 
     public static String DBCREATEKEYBOARD = "" + "CREATE TABLE keyboard(" + "ID integer PRIMARY KEY AUTOINCREMENT, " + "Name text not null, " + "Price numeric not null, " + "Quantity integer not null," + "Discount integer not null," + "Rating real not null," + "PhotoId integer not null" + ")";
 
     public static String DBCREATECUSTOMERS = "" + "CREATE TABLE customers(" + "ID integer PRIMARY KEY AUTOINCREMENT, " + "Name text not null, " + "Password text not null, " + "Email text not null, " + "Phone text not null " + ")";
 
-    public static String DBCREATEORDERS = "" + "CREATE TABLE orders(" + "ID integer PRIMARY KEY AUTOINCREMENT, " + "CustomerId integer not null, " + "KeyboardId integer not null, " + "OrdertDate text not null " + ")";
+    public static String DBCREATEORDERS = "" + "CREATE TABLE orders(" + "ID integer PRIMARY KEY AUTOINCREMENT, " + "CustomerId integer not null, " + "KeyboardId integer not null, " + "Quantity integer not null, " + "OrdertDate text not null " + ")";
 
     public static String DBCREATEWISHLIST = "" + "CREATE TABLE wishlist(" + "ID integer PRIMARY KEY AUTOINCREMENT, " + "CustomerId integer not null, " + "KeyboardId integer not null " + ")";
 
     public DbHelper(@Nullable Context context) {
         super(context, DBNAME, null, DBVERSION);
         _myDB = this.getWritableDatabase();
+//        _myDB.execSQL("DELETE FROM orders");
     }
 
     @Override
@@ -147,6 +149,14 @@ public class DbHelper extends SQLiteOpenHelper {
         return _myDB.rawQuery("SELECT * FROM keyboard", null);
     }
 
+    public void addToOrders(int customerId, int keyboardId, int quantity) {
+        _myDB.execSQL("INSERT INTO orders(CustomerId, KeyboardId, Quantity, OrdertDate) " + "VALUES(?, ?, ?, ?)",
+                new Object[]{customerId, keyboardId, quantity, Instant.now().toString()});
+
+        _myDB.execSQL("UPDATE orders SET Quantity = Quantity - ? WHERE CustomerId = ? AND KeyboardId = ?",
+                new Object[]{quantity, customerId, keyboardId});
+    }
+
     public void addToWishList(int customerId, int keyboardId) {
         _myDB.execSQL("INSERT INTO wishlist(CustomerId, KeyboardId) " + "VALUES(?, ?)", new Object[]{customerId, keyboardId});
     }
@@ -176,6 +186,12 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public List<KeyboardEntity> getOrders(int customerId) {
         Cursor c = getOrdersByCustomerId(customerId);
+        List<Integer> ids = test(c, DbHelper::mapInt);
+        return getAllById(ids);
+    }
+
+    public List<KeyboardEntity> getKeyboard(int keyboardId) {
+        Cursor c = getKeyboardByIdInternal(keyboardId);
         return test(c, DbHelper::mapKeyboard);
     }
 }

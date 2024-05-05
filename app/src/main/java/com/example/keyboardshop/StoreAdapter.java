@@ -10,7 +10,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.text.DecimalFormat;
 import java.util.List;
 
 public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreItemViewHolder> {
@@ -39,9 +38,14 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreItemVie
         holder.ratingBar.setRating(keyboard.getRating());
         holder.image.setImageResource(keyboard.getPhotoId());
 
-        holder.wishlistButton.setOnClickListener(v ->{
+        holder.wishlistButton.setOnClickListener(v -> {
             if (position != RecyclerView.NO_POSITION) {
-                storeActivity.insertIntoDatabase(1,keyboard.getId());
+                storeActivity.insertIntoDatabase(1, keyboard.getId());
+            }
+        });
+        holder.addToCartButton.setOnClickListener(v -> {
+            if (position != RecyclerView.NO_POSITION) {
+                storeActivity.addToCart(keyboard.getId());
             }
         });
     }
@@ -56,11 +60,8 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreItemVie
     }
 
     public static class StoreItemViewHolder extends RecyclerView.ViewHolder {
-        TextView name;
-        TextView price;
-        TextView inStock;
-        TextView discount;
-        ImageView image, wishlistButton;
+        TextView discount, name, price, inStock;
+        ImageView image, wishlistButton, addToCartButton;
         RatingBar ratingBar;
 
         public StoreItemViewHolder(@NonNull View itemView) {
@@ -72,6 +73,7 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreItemVie
             discount = itemView.findViewById(R.id.discountNumber);
             ratingBar = itemView.findViewById(R.id.ratingBar);
             wishlistButton = itemView.findViewById(R.id.wishlistButton);
+            addToCartButton = itemView.findViewById(R.id.addToCartButton);
         }
     }
 }

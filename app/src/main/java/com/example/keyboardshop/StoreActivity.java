@@ -1,9 +1,7 @@
 package com.example.keyboardshop;
 
-import static com.example.keyboardshop.Mapper.entityToModel;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -13,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,24 +40,6 @@ public class StoreActivity extends AppCompatActivity {
         itemsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         OnClickListeners();
     }
-
-//        RecyclerView.Adapter adapter = itemsRecyclerView.getAdapter();
-//
-//// Check if the adapter is not null and is of the expected type
-//        if (adapter instanceof StoreAdapter) {
-//            StoreAdapter yourAdapter = (StoreAdapter) adapter;
-//            List<KeyboardModel> allItems = yourAdapter.getList();
-//
-//            for (KeyboardModel item : allItems) {
-//                int quantity =item.getQuantity();
-//                String itemName = item.getName();
-//                BigDecimal itemPrice = item.getSinglePrice();
-//                int photoId  = item.getPhotoId();
-//                int discount = item.getDiscount();
-//                float rating = item.getRating();
-//            }
-//        }
-//    }
 
     private void OnClickListeners() {
         profileButton.setOnClickListener(v -> {
@@ -102,5 +81,26 @@ public class StoreActivity extends AppCompatActivity {
         }
         dbHelper.addToWishList(customerId, keyboardId);
         Toast.makeText(this, "Successfully added to your wishlist", Toast.LENGTH_SHORT).show();
+    }
+
+    public void addToCart(int keyboardId) {
+        List<KeyboardEntity> entities = dbHelper.getKeyboard(keyboardId);
+        List<KeyboardModel> model = entityToModel(entities);
+
+        if (InMemoryCart.addToCart(model)) {
+            Toast.makeText(this, "Successfully added to your cart", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Toast.makeText(this, "Failed to added to your cart", Toast.LENGTH_SHORT).show();
+    }
+
+    private static List<KeyboardModel> entityToModel(List<KeyboardEntity> list) {
+        List<KeyboardModel> result = new ArrayList<>();
+        for (KeyboardEntity ke : list) {
+            KeyboardModel km = new KeyboardModel(ke.getId(), 1, ke.getName(), ke.getPrice(), ke.getPhotoId(), ke.getDiscount(), ke.getRating());
+            result.add(km);
+        }
+        return result;
     }
 }
