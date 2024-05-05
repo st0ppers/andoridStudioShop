@@ -31,6 +31,11 @@ public class KeyboardModel {
         return quantity;
     }
 
+    public void setQuantity(int i) {
+        quantity = i;
+        totalPrice = singlePrice.multiply(BigDecimal.valueOf(quantity));
+    }
+
     public BigDecimal getSinglePrice() {
         return singlePrice;
     }

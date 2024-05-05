@@ -12,8 +12,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -37,7 +35,7 @@ public class ProfileActivity extends AppCompatActivity {
         emailTextView = findViewById(R.id.emailTextView);
         orderListRecyclerView = findViewById(R.id.orderListRecyclerView);
 
-        orders = GetBoughtItems();//todo get from db
+        orders = GetBoughtItems();
         adapter = new ProfileOrderAdapter(orders);
         orderListRecyclerView.setAdapter(adapter);
         orderListRecyclerView.setLayoutManager(new LinearLayoutManager(this));

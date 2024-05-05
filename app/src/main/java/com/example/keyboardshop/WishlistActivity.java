@@ -37,7 +37,7 @@ public class WishlistActivity extends AppCompatActivity {
     }
 
     public List<KeyboardModel> GetWishlistItems() {
-        List<Integer> keyboardIds = dbHelper.getKeyboardsFromWishlistByCustomerId(1);//todo get customerId
+        List<Integer> keyboardIds = dbHelper.getKeyboardsFromWishlistByCustomerId(1);
         List<KeyboardEntity> entities = dbHelper.getAllById(keyboardIds);
 
         return entityToModel(entities);
